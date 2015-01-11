@@ -15,10 +15,10 @@ private:
 	Card card;
 
 	static std::string getTextureName(Card card);
-	static Vec2 getCardPosition(CardPlace place);
 
 public:
 	static CardSprite* createCard(Card card, CardPlace place);
+	static Vec2 getCardPosition(CardPlace place);
 };
 #endif
 

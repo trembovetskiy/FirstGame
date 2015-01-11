@@ -18,6 +18,8 @@ enum CardPlace{
 	TABLE_2,
 	TABLE_3,
 	TABLE_4,
+
+	PACK
 } ;
 
 const Vec2 TABLE_BEGIN_POSITION = Vec2(100, 300);

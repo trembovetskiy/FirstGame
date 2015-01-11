@@ -20,19 +20,33 @@ void GameScene::createBackground()
 	background->setPosition(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2);
 	this->addChild(background);
 
-	
-	auto mySprite = Sprite::create();
-	mySprite->setTexture("2.png");
+	for (int i = CardPlace::COMP_0; i <= CardPlace::PACK; i++)
+	{
+		CardPlace place = (CardPlace)i;
+		std::string textureName;
+		int opacity;
+		if (place == CardPlace::PACK)
+		{
+			textureName = "image/card_shirt.png";
+			opacity = 255;
+		}
+		else
+		{
+			textureName = "image/card_bg.png";
+			opacity = 150;
+		};
 
-	mySprite->setPosition(Vec2(200, 200));
+		Sprite* placeSprite = Sprite::create( textureName );
+		Vec2 pos = CardSprite::getCardPosition(place);
+		
+		placeSprite->setScale(CARD_SCALE);
+		placeSprite->setPosition(pos);
+		placeSprite->setOpacity(opacity);
 
-	//auto moveTo = MoveTo::create(2, Vec2(1000, 1000));
-	//mySprite->runAction(moveTo);
+		this->addChild(placeSprite);
+	}
 	
-	
-	
-
-	//this->addChild(mySprite);
+	/*
 	for (int i = 0; i < 9; i++)
 	{
 		CardPlace place = (CardPlace)i;
@@ -40,20 +54,6 @@ void GameScene::createBackground()
 		c.range = (Range) (rand() % RANGE_COUNT);
 		c.suite = (Suite)(rand() % SUITE_COUNT);
 		CardSprite* card = CardSprite::createCard(c, place);
-		this->addChild(card);
-	}
-	/*
-	Card c;
-	for (int r_i = 0; r_i < RANGE_COUNT; r_i++)
-	for (int s_i = 0; s_i < SUITE_COUNT; s_i++)
-	{
-		c.range = (Range) r_i;
-		c.suite = (Suite) s_i;
-		Vec2 pos;
-		pos.x = 100 + r_i * 50;
-		pos.y = 100 + s_i * 100;
-		CardSprite* card = CardSprite::createCard(c, pos);
-
 		this->addChild(card);
 	}
 	*/

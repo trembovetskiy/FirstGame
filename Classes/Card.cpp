@@ -39,9 +39,13 @@ Vec2 CardSprite::getCardPosition(CardPlace place)
 		pos.y += TABLE_DELTA_Y;
 		pos.x += TABLE_DELTA_X * (place - 2.0f + 1.5f);
 	}
-	else 
+	else if (place <= CardPlace::PACK)
 	{
 		pos.x += TABLE_DELTA_X * (place - 4);
+	}
+	else
+	{
+		pos.x += TABLE_DELTA_X * (place - 3);
 	}
 	
 	return pos;
