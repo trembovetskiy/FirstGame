@@ -9,6 +9,7 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	GameMechanic::getInstance()->~GameMechanic();
 }
 
 void GameScene::createBackground()
@@ -27,7 +28,7 @@ void GameScene::createBackground()
 		int opacity;
 		if (place == CardPlace::PACK)
 		{
-			textureName = "image/card_shirt.png";
+			textureName = SHIRT_TEXTURE_NAME;
 			opacity = 255;
 		}
 		else
@@ -46,18 +47,29 @@ void GameScene::createBackground()
 		this->addChild(placeSprite);
 	}
 	
-	/*
-	for (int i = 0; i < 9; i++)
-	{
-		CardPlace place = (CardPlace)i;
-		Card c;
-		c.range = (Range) (rand() % RANGE_COUNT);
-		c.suite = (Suite)(rand() % SUITE_COUNT);
-		CardSprite* card = CardSprite::createCard(c, place);
-		this->addChild(card);
-	}
-	*/
+	GameMechanic *mechanic = GameMechanic::getInstance();
+	mechanic->incrementState();
 	
+}
+
+void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
+{
+	
+	CardSprite* c = CardSprite::createCard(card, place);
+	this->addChild(c);
+	c->animate( firstDelay );
+}
+
+void GameScene::addStartCards(vector<Card*> cards, bool isReverse)
+{
+
+	for (int i = 0; i < cards.size(); i++)
+	{
+		int placeIndex = isReverse ? (2 + i) % 4 : i;
+		float delay = MIDDLE_CARD_DELAY * i;
+
+		this->addCard(delay, cards[i], (CardPlace)placeIndex);
+	};
 }
 
 bool GameScene::init()
@@ -66,9 +78,20 @@ bool GameScene::init()
 		return false;
 	this->createBackground();
 
-	//card = new Card();
-	//card->createCard();
-	//this->addChild(card);
-
 	return true;
 }
+
+GameScene* GameScene::instance = nullptr;
+GameScene* GameScene::getInstance()
+{
+	if (instance == NULL)
+	{
+		instance = new GameScene();
+		if (instance && instance->init())
+		{
+			instance->autorelease();
+		}
+	}
+	return instance;
+}
+

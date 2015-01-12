@@ -16,6 +16,9 @@
     <Filter Include="src\GameScene">
       <UniqueIdentifier>{8711c06e-514d-4179-8ae6-eae889da9732}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GameMechanic">
+      <UniqueIdentifier>{079caa92-a831-40a2-b545-3b645f611bc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,10 +27,19 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Card.cpp">
+    <ClCompile Include="..\Classes\GameScene.cpp">
       <Filter>src\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\GameScene.cpp">
+    <ClCompile Include="..\Classes\GameMechanic.cpp">
+      <Filter>src\GameMechanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Player.cpp">
+      <Filter>src\GameMechanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CardPool.cpp">
+      <Filter>src\GameMechanic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Card.cpp">
       <Filter>src\GameScene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -49,6 +61,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\VisualConfig.h">
       <Filter>src\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GameMechanic.h">
+      <Filter>src\GameMechanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Player.h">
+      <Filter>src\GameMechanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Config.h">
+      <Filter>src\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CardPool.h">
+      <Filter>src\GameMechanic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

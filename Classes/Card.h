@@ -1,24 +1,26 @@
 #ifndef _CARD_HPP
 #define _CARD_HPP
 
-#include "GameCards.h"
-#include "VisualConfig.h"
+#include "Config.h"
 #include "cocos2d.h"
 using namespace cocos2d;
-
-
 
 
 class CardSprite: public cocos2d::CCSprite
 {
 private:
-	Card card;
+	std::string textureName;
+	CardPlace place;
 
-	static std::string getTextureName(Card card);
-
+	static std::string getTextureName(Card* card);
 public:
-	static CardSprite* createCard(Card card, CardPlace place);
-	static Vec2 getCardPosition(CardPlace place);
+	CardSprite(std::string textureName, CardPlace place);
+
+	void animate(float firstDelay);
+	void showCard();
+
+	static CardSprite* createCard(Card* card, CardPlace place);
+	static Vec2 getCardPosition(CardPlace place);	
 };
 #endif
 

@@ -26,4 +26,8 @@ const Vec2 TABLE_BEGIN_POSITION = Vec2(100, 300);
 const float TABLE_DELTA_X = 100;
 const float TABLE_DELTA_Y = 120;
 
+#define MOVE_CARD_DURATION 0.5
+#define MIDDLE_CARD_DELAY 0.5
+#define SHIRT_TEXTURE_NAME "image/card_shirt.png"
+
 #endif
