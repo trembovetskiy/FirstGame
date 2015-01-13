@@ -9,7 +9,7 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	GameMechanic::getInstance()->~GameMechanic();
+	delete( GameMechanic::getInstance());
 }
 
 void GameScene::createBackground()

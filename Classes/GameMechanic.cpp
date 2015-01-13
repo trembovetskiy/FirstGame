@@ -3,8 +3,8 @@
 GameMechanic::GameMechanic()
 {
 	this->state = GameState::BEGIN_STATE;
-	this->comp = nullptr;
-	this->user = nullptr;
+	this->comp = new Player();
+	this->user = new Player();
 	this->compFirst = true;
 }
 
@@ -14,6 +14,7 @@ GameMechanic::~GameMechanic()
 	delete(user);
 	for (int i = 0; i < tableCards.size(); i++)
 		delete( tableCards[ i ] );
+	delete ( CardPool::getInstance() );
 }
 
 void GameMechanic::incrementState()
@@ -41,14 +42,14 @@ void GameMechanic::toPreflopState()
 
 	if (this->compFirst)
 	{
-		comp = new Player(cards[0], cards[1]);
-		user = new Player(cards[2], cards[3]);
+		comp->setCards(cards[0], cards[1]);
+		user->setCards(cards[2], cards[3]);
 		
 	}
 	else
 	{
-		user = new Player(cards[0], cards[1]);
-		comp = new Player(cards[2], cards[3]);
+		user->setCards(cards[0], cards[1]);
+		comp->setCards(cards[2], cards[3]);
 	}
 
 	gameScene->addStartCards(cards, !this->compFirst);

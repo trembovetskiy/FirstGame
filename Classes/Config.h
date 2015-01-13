@@ -4,4 +4,6 @@
 #include "GameCards.h"
 #include "VisualConfig.h"
 
+#define START_MONEY 1000.0
+
 #endif

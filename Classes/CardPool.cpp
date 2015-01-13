@@ -14,6 +14,12 @@ CardPool::CardPool()
 		}
 }
 
+CardPool::~CardPool()
+{
+	for (std::list<Card*>::iterator i = pool.begin(); i != pool.end(); i++)
+		delete(*i);
+}
+
 CardPool* CardPool::instance = nullptr;
 
 CardPool* CardPool::getInstance()

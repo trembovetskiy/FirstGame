@@ -7,8 +7,13 @@ class Player
 {
 private:
 	Card* cards[2];
+	float money;
 public:
-	Player(Card* card0, Card* card1);
+	Player();
+	~Player();
+
+	void setCards(Card* card0, Card* card1);
+	float getMoney();
 };
 
 #endif

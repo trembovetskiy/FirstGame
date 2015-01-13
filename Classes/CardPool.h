@@ -11,6 +11,8 @@ private:
 	static CardPool* instance;
 public:
 	CardPool();
+	~CardPool();
+
 	static CardPool* getInstance();
 	Card* getRandomCard();
 };
