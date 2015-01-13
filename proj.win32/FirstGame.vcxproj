@@ -140,8 +140,10 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Card.cpp" />
     <ClCompile Include="..\Classes\CardPool.cpp" />
+    <ClCompile Include="..\Classes\CombinationManager.cpp" />
     <ClCompile Include="..\Classes\GameMechanic.cpp" />
     <ClCompile Include="..\Classes\GameScene.cpp" />
+    <ClCompile Include="..\Classes\LanguageManager.cpp" />
     <ClCompile Include="..\Classes\Player.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -149,10 +151,12 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Card.h" />
     <ClInclude Include="..\Classes\CardPool.h" />
+    <ClInclude Include="..\Classes\CombinationManager.h" />
     <ClInclude Include="..\Classes\Config.h" />
     <ClInclude Include="..\Classes\GameCards.h" />
     <ClInclude Include="..\Classes\GameMechanic.h" />
     <ClInclude Include="..\Classes\GameScene.h" />
+    <ClInclude Include="..\Classes\LanguageManager.h" />
     <ClInclude Include="..\Classes\Player.h" />
     <ClInclude Include="..\Classes\VisualConfig.h" />
     <ClInclude Include="main.h" />

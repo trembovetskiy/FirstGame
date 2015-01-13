@@ -19,6 +19,7 @@ GameMechanic::~GameMechanic()
 
 void GameMechanic::incrementState()
 {
+	
 	switch (this->state)
 	{
 	case GameState::BEGIN_STATE:
@@ -61,6 +62,8 @@ void GameMechanic::toPreflopState()
 
 	float delay = gameScene->addStartCards(cards, !this->compFirst);
 	gameScene->staticViewSynchronize(delay);
+	//
+	CombinationManager* m = new CombinationManager();
 }
 
 GameMechanic* GameMechanic::instance = nullptr;

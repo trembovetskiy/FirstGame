@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "CardPool.h"
 #include "GameScene.h"
+#include "CombinationManager.h"
 #include <vector>
 using namespace std;
 
@@ -32,7 +33,6 @@ public:
 	~GameMechanic();
 	
 	void incrementState();
-
 
 	Player* getComp(){ return comp; }
 	Player* getUser(){ return user; }

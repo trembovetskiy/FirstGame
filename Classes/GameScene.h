@@ -7,6 +7,7 @@
 #include "cocos2d.h"
 #include "Card.h"
 #include "Config.h"
+#include "LanguageManager.h"
 #include "GameMechanic.h"
 
 using namespace cocos2d;

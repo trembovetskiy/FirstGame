@@ -74,7 +74,7 @@ void GameScene::createLabels()
 		this->moneyLabels[i] = label;
 		this->addChild(label);
 
-		label = LabelTTF::create("Bet:", "fonts/GameFont.ttf", LABEL_FONT_SIZE);
+		label = LabelTTF::create(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() , "fonts/times.ttf", LABEL_FONT_SIZE);
 		label->setPosition(betPos[i]);
 		label->setColor(Color3B::ORANGE);
 		this->betLabels[i] = label;
@@ -129,10 +129,10 @@ void GameScene::staticViewSynchronize()
 	this->moneyLabels[PlayerType::USER]->setString(std::to_string(user->getMoney()) + "$");
 
 	if (comp->getBetMoney() > 0)
-		this->betLabels[PlayerType::COMPUTER]->setString("Bet: " + std::to_string(comp->getBetMoney()) + "$");
+		this->betLabels[PlayerType::COMPUTER]->setString(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() + std::to_string(comp->getBetMoney()) + "$");
 
 	if (comp->getBetMoney() > 0)
-		this->betLabels[PlayerType::USER]->setString("Bet: " + std::to_string(user->getBetMoney()) + "$");
+		this->betLabels[PlayerType::USER]->setString(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() + std::to_string(user->getBetMoney()) + "$");
 }
 
 void GameScene::staticViewSynchronize(double delay)
