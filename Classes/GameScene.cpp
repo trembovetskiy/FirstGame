@@ -80,6 +80,11 @@ void GameScene::createLabels()
 		this->betLabels[i] = label;
 		this->addChild(label);
 	}
+
+	combinationLabel = LabelTTF::create("", "fonts/times.ttf", LABEL_FONT_SIZE);
+	combinationLabel->setPosition(pos[USER] + Vec2(0, -50));
+	combinationLabel->setColor(Color3B(50, 200, 50));
+	this->addChild(combinationLabel);
 }
 
 void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
@@ -133,6 +138,12 @@ void GameScene::staticViewSynchronize()
 
 	if (comp->getBetMoney() > 0)
 		this->betLabels[PlayerType::USER]->setString(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() + std::to_string(user->getBetMoney()) + "$");
+
+	Combination* combination = mechanic->getUserCombination();
+	if (combination != NULL)
+	{
+		this->combinationLabel->setString( GameScene::getCombinationText(combination ));
+	}
 }
 
 void GameScene::staticViewSynchronize(double delay)
@@ -159,5 +170,16 @@ GameScene* GameScene::getInstance()
 		}
 	}
 	return instance;
+}
+
+std::string GameScene::getCombinationText(Combination* comb)
+{
+	std::string preambule = LanguageManager::getInstance()->getStringForKey("CombCaption");
+	std::string combText = LanguageManager::getInstance()->getStringForKey("Combination"+ std::to_string(comb->comb));
+	std::string cardText = RANGE_NAMES[comb->card->range].substr(0, 1);
+	std::transform(cardText.begin(), cardText.end(), cardText.begin(), toupper);
+
+	return preambule + "\n" + combText + " (" + cardText + ")";
+	
 }
 

@@ -1,3 +1,14 @@
 {
-    "BetCaption": "Ставка: "
+    "BetCaption": "Ставка: ",
+	"CombCaption": "Комбінація: ",
+	"Combination0": "Кікер",
+	"Combination1": "Пара",
+	"Combination2": "Дві пари",
+	"Combination3": "Сет",
+	"Combination4": "Стріт",
+	"Combination5": "Флеш",
+	"Combination6": "Фул-хауз",
+	"Combination7": "Каре",
+	"Combination8": "Стріт-флеш",
+	"Combination9": "Роял-флеш"
 }

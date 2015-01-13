@@ -17,6 +17,14 @@ GameMechanic::~GameMechanic()
 	delete ( CardPool::getInstance() );
 }
 
+Combination* GameMechanic::getUserCombination()
+{
+	if (this->user != NULL)
+		return CombinationManager::getCurrentCombination(this->user, this->tableCards);
+	else
+		return nullptr;
+}
+
 void GameMechanic::incrementState()
 {
 	

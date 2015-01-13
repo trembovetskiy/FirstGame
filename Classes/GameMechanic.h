@@ -33,6 +33,7 @@ public:
 	~GameMechanic();
 	
 	void incrementState();
+	Combination* getUserCombination();
 
 	Player* getComp(){ return comp; }
 	Player* getUser(){ return user; }

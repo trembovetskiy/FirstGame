@@ -8,6 +8,7 @@
 #include "Card.h"
 #include "Config.h"
 #include "LanguageManager.h"
+#include "CombinationManager.h"
 #include "GameMechanic.h"
 
 using namespace cocos2d;
@@ -35,9 +36,11 @@ private:
 
 	LabelTTF* moneyLabels[2];
 	LabelTTF* betLabels[2];
+	LabelTTF* combinationLabel;
 
 	void createBackground();
 	void createLabels();
+	static std::string getCombinationText(Combination* comb);
 };
 #endif
 

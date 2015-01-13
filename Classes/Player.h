@@ -20,6 +20,7 @@ public:
 	int getMoney() { return money; }
 	int getBetMoney() { return betMoney; }
 	PlayerType getType() { return playerType; }
+	Card* getCard(int index) { return cards[index]; }
 };
 
 #endif
