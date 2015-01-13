@@ -21,7 +21,10 @@ public:
 	virtual bool init();
 	
 	void addCard(float firstDelay, Card* card, CardPlace place);
-	void addStartCards(vector<Card*> cards, bool isReverse);
+	float addStartCards(vector<Card*> cards, bool isReverse); 
+
+	void staticViewSynchronize();
+	void staticViewSynchronize(double delay);
 
 	static GameScene* instance;
 	static GameScene* getInstance();
@@ -29,7 +32,11 @@ public:
 private:
 	map<CardPlace, CardSprite*> cards;
 
+	LabelTTF* moneyLabels[2];
+	LabelTTF* betLabels[2];
+
 	void createBackground();
+	void createLabels();
 };
 #endif
 

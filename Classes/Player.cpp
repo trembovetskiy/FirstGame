@@ -1,9 +1,11 @@
 #include "Player.h"
 
-Player::Player()
+Player::Player(PlayerType pType)
 {
 	cards[0] = cards[1] = nullptr;
 	this->money = START_MONEY;
+	this->playerType = pType;
+	this->betMoney = 0;
 }
 
 Player::~Player()
@@ -18,7 +20,11 @@ void Player::setCards(Card* card0, Card* card1)
 	cards[1] = card1;
 }
 
-float Player::getMoney()
+void Player::setBet(int value)
 {
-	return this->money;
+	if (this->money - value >= 0)
+	{
+		this->money -= value;
+		this->betMoney += value;
+	}
 }

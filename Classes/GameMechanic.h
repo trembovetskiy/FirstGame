@@ -33,6 +33,9 @@ public:
 	
 	void incrementState();
 
+
+	Player* getComp(){ return comp; }
+	Player* getUser(){ return user; }
 	static GameMechanic* getInstance();
 };
 

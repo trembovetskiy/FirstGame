@@ -29,5 +29,6 @@ const float TABLE_DELTA_Y = 120;
 #define MOVE_CARD_DURATION 0.5
 #define MIDDLE_CARD_DELAY 0.5
 #define SHIRT_TEXTURE_NAME "image/card_shirt.png"
+#define LABEL_FONT_SIZE 20
 
 #endif

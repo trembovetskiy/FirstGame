@@ -47,9 +47,39 @@ void GameScene::createBackground()
 		this->addChild(placeSprite);
 	}
 	
-	GameMechanic *mechanic = GameMechanic::getInstance();
-	mechanic->incrementState();
+}
+
+void GameScene::createLabels()
+{
 	
+	Vec2 pos[2];
+	pos[PlayerType::USER] = CardSprite::getCardPosition(CardPlace::USER_0) + Vec2(TABLE_DELTA_X / 2, -TABLE_DELTA_Y / 2);
+	pos[PlayerType::COMPUTER] = CardSprite::getCardPosition(CardPlace::COMP_0) + Vec2(TABLE_DELTA_X / 2, TABLE_DELTA_Y / 2);
+
+	Vec2 betPos[2];
+	betPos[PlayerType::USER] = CardSprite::getCardPosition(CardPlace::USER_1) + Vec2(TABLE_DELTA_X  , 0);
+	betPos[PlayerType::COMPUTER] = CardSprite::getCardPosition(CardPlace::COMP_1) + Vec2(TABLE_DELTA_X , 0);
+
+	for (int i = PlayerType::COMPUTER; i <= PlayerType::USER; i++)
+	{
+		Sprite* t = Sprite::create();
+		t->setTextureRect(Rect(0, 0, 80, 30));
+		t->setColor(Color3B(40, 230, 0));
+		t->setOpacity(120);
+		t->setPosition(pos[i]);
+		this->addChild(t);
+
+		LabelTTF* label = LabelTTF::create("0$", "fonts/GameFont.ttf", LABEL_FONT_SIZE);
+		label->setPosition(pos[i]);
+		this->moneyLabels[i] = label;
+		this->addChild(label);
+
+		label = LabelTTF::create("Bet:", "fonts/GameFont.ttf", LABEL_FONT_SIZE);
+		label->setPosition(betPos[i]);
+		label->setColor(Color3B::ORANGE);
+		this->betLabels[i] = label;
+		this->addChild(label);
+	}
 }
 
 void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
@@ -60,7 +90,7 @@ void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
 	c->animate( firstDelay );
 }
 
-void GameScene::addStartCards(vector<Card*> cards, bool isReverse)
+float GameScene::addStartCards(vector<Card*> cards, bool isReverse)
 {
 
 	for (int i = 0; i < cards.size(); i++)
@@ -70,17 +100,53 @@ void GameScene::addStartCards(vector<Card*> cards, bool isReverse)
 
 		this->addCard(delay, cards[i], (CardPlace)placeIndex);
 	};
+
+	return MIDDLE_CARD_DELAY * cards.size();
 }
 
 bool GameScene::init()
 {
 	if (!Scene::init())
 		return false;
+
 	this->createBackground();
+	this->createLabels();
+
+	GameMechanic *mechanic = GameMechanic::getInstance();
+	mechanic->incrementState();
 
 	return true;
 }
 
+
+void GameScene::staticViewSynchronize()
+{
+	GameMechanic* mechanic = GameMechanic::getInstance();
+	Player* comp = mechanic->getComp();
+	Player* user = mechanic->getUser();
+
+	this->moneyLabels[PlayerType::COMPUTER]->setString( std::to_string(comp->getMoney()) + "$");
+	this->moneyLabels[PlayerType::USER]->setString(std::to_string(user->getMoney()) + "$");
+
+	if (comp->getBetMoney() > 0)
+		this->betLabels[PlayerType::COMPUTER]->setString("Bet: " + std::to_string(comp->getBetMoney()) + "$");
+
+	if (comp->getBetMoney() > 0)
+		this->betLabels[PlayerType::USER]->setString("Bet: " + std::to_string(user->getBetMoney()) + "$");
+}
+
+void GameScene::staticViewSynchronize(double delay)
+{
+	DelayTime* delayAction = DelayTime::create(delay);
+	auto callback = CallFunc::create([this]() {
+		this->staticViewSynchronize();
+	});
+
+	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
+	this->runAction(seq);
+}
+
+//-----------------------------static----------------------------------
 GameScene* GameScene::instance = nullptr;
 GameScene* GameScene::getInstance()
 {

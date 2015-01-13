@@ -7,13 +7,19 @@ class Player
 {
 private:
 	Card* cards[2];
-	float money;
+	int money;
+	int betMoney;
+	PlayerType playerType;
 public:
-	Player();
+	Player(PlayerType pType);
 	~Player();
 
 	void setCards(Card* card0, Card* card1);
-	float getMoney();
+	void setBet(int value);
+
+	int getMoney() { return money; }
+	int getBetMoney() { return betMoney; }
+	PlayerType getType() { return playerType; }
 };
 
 #endif

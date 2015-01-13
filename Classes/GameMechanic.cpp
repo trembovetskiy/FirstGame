@@ -3,8 +3,8 @@
 GameMechanic::GameMechanic()
 {
 	this->state = GameState::BEGIN_STATE;
-	this->comp = new Player();
-	this->user = new Player();
+	this->comp = new Player( PlayerType::COMPUTER );
+	this->user = new Player( PlayerType::USER );
 	this->compFirst = true;
 }
 
@@ -22,6 +22,8 @@ void GameMechanic::incrementState()
 	switch (this->state)
 	{
 	case GameState::BEGIN_STATE:
+
+		GameScene::getInstance()->staticViewSynchronize();
 		this->toPreflopState();
 		break;
 	default:
@@ -43,16 +45,22 @@ void GameMechanic::toPreflopState()
 	if (this->compFirst)
 	{
 		comp->setCards(cards[0], cards[1]);
+		comp->setBet( SMALL_BLIND );
+
 		user->setCards(cards[2], cards[3]);
-		
+		user->setBet( BIG_BLIND );
 	}
 	else
 	{
 		user->setCards(cards[0], cards[1]);
+		user->setBet( SMALL_BLIND );
+
 		comp->setCards(cards[2], cards[3]);
+		comp->setBet( BIG_BLIND );
 	}
 
-	gameScene->addStartCards(cards, !this->compFirst);
+	float delay = gameScene->addStartCards(cards, !this->compFirst);
+	gameScene->staticViewSynchronize(delay);
 }
 
 GameMechanic* GameMechanic::instance = nullptr;
