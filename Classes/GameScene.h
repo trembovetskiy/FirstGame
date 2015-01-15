@@ -27,6 +27,7 @@ public:
 
 	void staticViewSynchronize();
 	void staticViewSynchronize(double delay);
+	void setUserButtons(std::vector<Turn*> turns);
 
 	static GameScene* instance;
 	static GameScene* getInstance();
@@ -37,10 +38,18 @@ private:
 	LabelTTF* moneyLabels[2];
 	LabelTTF* betLabels[2];
 	LabelTTF* combinationLabel;
+	LabelTTF* turnLabels[2];
+	LabelTTF* bankLabel;
+
+	MenuItemImage* userButtons[4];
 
 	void createBackground();
 	void createLabels();
+	void createButtons();
+
 	static std::string getCombinationText(Combination* comb);
+
+	void onBtnClick(Object* sender);
 };
 #endif
 

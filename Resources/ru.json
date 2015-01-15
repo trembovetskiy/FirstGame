@@ -10,5 +10,11 @@
 	"Combination6": "Фул-хауз",
 	"Combination7": "Каре",
 	"Combination8": "Стріт-флеш",
-	"Combination9": "Роял-флеш"
+	"Combination9": "Роял-флеш",
+	"TurnCaption": "Хід: ",
+	"Turn0": "Чек",
+	"Turn1": "Зрівняти",
+	"Turn2": "Райз",
+	"Turn3": "Пас",
+	"BankCaption": "Банк: "
 }

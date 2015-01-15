@@ -12,6 +12,20 @@ GameScene::~GameScene()
 	delete( GameMechanic::getInstance());
 }
 
+void GameScene::onBtnClick(Object* sender)
+{
+	MenuItemImage* m = (MenuItemImage*)sender;
+	int num = m->getTag();
+	Turn* turn = new Turn;
+	turn->turn = (Turns)num;
+	turn->value = 0;
+
+	GameMechanic::getInstance()->setUserTurn( turn );
+
+	for (int i = Turns::TURN_CHECK; i <= Turns::TURN_FOLD; i++)
+		this->userButtons[i]->setVisible(false);
+}
+
 void GameScene::createBackground()
 {
 	auto background = Sprite::create();
@@ -46,6 +60,10 @@ void GameScene::createBackground()
 
 		this->addChild(placeSprite);
 	}
+
+	//auto menu = Menu::create(m, NULL);
+	//menu->setPosition(50, 50);
+	//this->addChild(menu);
 	
 }
 
@@ -79,12 +97,42 @@ void GameScene::createLabels()
 		label->setColor(Color3B::ORANGE);
 		this->betLabels[i] = label;
 		this->addChild(label);
+
+		label = LabelTTF::create(LanguageManager::getInstance()->getStringForKey("TurnCaption").c_str(), "fonts/times.ttf", LABEL_FONT_SIZE);
+		label->setPosition(betPos[i] + Vec2(0,-40));
+		label->setColor(Color3B::RED);
+		label->setVerticalAlignment(cocos2d::kCCVerticalTextAlignmentTop);
+		this->turnLabels[i] = label;
+		this->addChild(label);
 	}
 
 	combinationLabel = LabelTTF::create("", "fonts/times.ttf", LABEL_FONT_SIZE);
 	combinationLabel->setPosition(pos[USER] + Vec2(0, -50));
 	combinationLabel->setColor(Color3B(50, 200, 50));
 	this->addChild(combinationLabel);
+
+	this->bankLabel = LabelTTF::create(LanguageManager::getInstance()->getStringForKey("BankCaption").c_str(), "fonts/times.ttf", LABEL_FONT_SIZE);
+	this->bankLabel->setPosition(CardSprite::getCardPosition(CardPlace::PACK) + Vec2(TABLE_DELTA_X , 0));
+	this->addChild( this->bankLabel );
+}
+
+void GameScene::createButtons()
+{
+	std::string texName[] = {"check","call","raise","pass"};
+	auto userMenu = Menu::create();
+	userMenu->setPosition(Vec2(0, 0));
+
+	for (int i = Turns::TURN_CHECK; i <= Turns::TURN_FOLD; i++)
+	{
+		MenuItemImage* m = MenuItemImage::create("buttons/" + texName[i] + ".png", "buttons/" + texName[i] + "_press.png", "", CC_CALLBACK_1(GameScene::onBtnClick, this));
+		m->setTag(i);
+		m->setVisible(false);
+		this->userButtons[i] = m;
+
+		userMenu->addChild(m);
+	}
+	this->addChild(userMenu);
+
 }
 
 void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
@@ -116,6 +164,7 @@ bool GameScene::init()
 
 	this->createBackground();
 	this->createLabels();
+	this->createButtons();
 
 	GameMechanic *mechanic = GameMechanic::getInstance();
 	mechanic->incrementState();
@@ -124,26 +173,43 @@ bool GameScene::init()
 }
 
 
-void GameScene::staticViewSynchronize()
+void GameScene::staticViewSynchronize() 
 {
 	GameMechanic* mechanic = GameMechanic::getInstance();
 	Player* comp = mechanic->getComp();
 	Player* user = mechanic->getUser();
+	Player* players[2] = { comp, user };
 
-	this->moneyLabels[PlayerType::COMPUTER]->setString( std::to_string(comp->getMoney()) + "$");
-	this->moneyLabels[PlayerType::USER]->setString(std::to_string(user->getMoney()) + "$");
+	for (int i = PlayerType::COMPUTER; i <= PlayerType::USER; i++)
+	{
+		PlayerType pType = (PlayerType)i;
+		Turn* turn = players[i]->getCurrentTurn();
 
-	if (comp->getBetMoney() > 0)
-		this->betLabels[PlayerType::COMPUTER]->setString(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() + std::to_string(comp->getBetMoney()) + "$");
+		LabelTTF* label = this->turnLabels[pType];
+		std::string txt = LanguageManager::getInstance()->getStringForKey("TurnCaption") + "\n";
+		if (turn != NULL)
+		{
+			txt += LanguageManager::getInstance()->getStringForKey("Turn" + std::to_string(turn->turn));
+			if (turn->value > 0)
+				txt += " " + std::to_string(turn->value);
+		}
+		label->setString(txt);
+	
+		this->moneyLabels[pType]->setString( std::to_string(players[i]->getMoney()) + "$");
 
-	if (comp->getBetMoney() > 0)
-		this->betLabels[PlayerType::USER]->setString(LanguageManager::getInstance()->getStringForKey("BetCaption").c_str() + std::to_string(user->getBetMoney()) + "$");
+		std::string betTxt = LanguageManager::getInstance()->getStringForKey("BetCaption");
+		if (players[i]->getBetMoney() > 0) betTxt += std::to_string( players[i]->getBetMoney()) + "$";
+		
+		this->betLabels[pType]->setString(betTxt);
+	}
 
 	Combination* combination = mechanic->getUserCombination();
-	if (combination != NULL)
-	{
-		this->combinationLabel->setString( GameScene::getCombinationText(combination ));
-	}
+	this->combinationLabel->setString( GameScene::getCombinationText(combination ));
+
+	std::string bankText = LanguageManager::getInstance()->getStringForKey("BankCaption").c_str();
+	if (mechanic->getBank() > 0)
+		bankText += " " + std::to_string(mechanic->getBank()) + "$";
+	this->bankLabel->setString(bankText);
 }
 
 void GameScene::staticViewSynchronize(double delay)
@@ -155,6 +221,20 @@ void GameScene::staticViewSynchronize(double delay)
 
 	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
 	this->runAction(seq);
+}
+
+
+void GameScene::setUserButtons(std::vector<Turn*> turns)
+{
+	int posIndex = 0;
+	for (std::vector<Turn*>::iterator i = turns.begin(); i != turns.end(); i++)
+	{
+		Turn* turn = *i;
+		auto btn = this->userButtons[turn->turn];
+		btn->setPosition(Vec2(150 + btn->getContentSize().width * posIndex, 30));
+		btn->setVisible(true);
+		posIndex++;
+	}
 }
 
 //-----------------------------static----------------------------------
@@ -174,12 +254,18 @@ GameScene* GameScene::getInstance()
 
 std::string GameScene::getCombinationText(Combination* comb)
 {
-	std::string preambule = LanguageManager::getInstance()->getStringForKey("CombCaption");
-	std::string combText = LanguageManager::getInstance()->getStringForKey("Combination"+ std::to_string(comb->comb));
-	std::string cardText = RANGE_NAMES[comb->card->range].substr(0, 1);
-	std::transform(cardText.begin(), cardText.end(), cardText.begin(), toupper);
-
-	return preambule + "\n" + combText + " (" + cardText + ")";
+	std::string txt = LanguageManager::getInstance()->getStringForKey("CombCaption")+"\n";
+	if (comb != NULL)
+	{
 	
+		txt+= LanguageManager::getInstance()->getStringForKey("Combination"+ std::to_string(comb->comb));
+		std::string cardText = RANGE_NAMES[comb->card->range];
+		if (comb->card->range > Range::CARD_10)
+			cardText = cardText.substr(0, 1);
+	
+		std::transform(cardText.begin(), cardText.end(), cardText.begin(), toupper);
+		txt += " (" + cardText + ")";
+	}
+	return txt;	
 }
 

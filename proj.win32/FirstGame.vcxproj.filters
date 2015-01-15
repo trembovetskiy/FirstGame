@@ -48,6 +48,9 @@
     <ClCompile Include="..\Classes\CombinationManager.cpp">
       <Filter>src\GameMechanic</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\AI.cpp">
+      <Filter>src\GameMechanic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -84,6 +87,9 @@
       <Filter>src\Config</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\CombinationManager.h">
+      <Filter>src\GameMechanic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AI.h">
       <Filter>src\GameMechanic</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,6 +5,10 @@
 #include "CardPool.h"
 #include "GameScene.h"
 #include "CombinationManager.h"
+#include "AI.h"
+#include "cocos2d.h"
+using namespace cocos2d;
+
 #include <vector>
 using namespace std;
 
@@ -16,6 +20,7 @@ enum GameState{
 	RIVER
 };
 
+
 class GameMechanic
 {
 private:
@@ -24,8 +29,13 @@ private:
 	vector<Card*> tableCards;
 	GameState state;
 	bool compFirst;
+	int bank;
 
 	void toPreflopState();
+	void initTurn();
+	void compTurn();
+	void initUserTurn();
+	void endState(float delay = 2);
 
 	static GameMechanic* instance;
 public:
@@ -34,9 +44,12 @@ public:
 	
 	void incrementState();
 	Combination* getUserCombination();
+	void setUserTurn(Turn* turn);
 
 	Player* getComp(){ return comp; }
 	Player* getUser(){ return user; }
+	int getBank() {return bank; }
+
 	static GameMechanic* getInstance();
 };
 
