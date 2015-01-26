@@ -145,12 +145,22 @@ void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
 
 float GameScene::addStartCards(vector<Card*> cards, bool isReverse)
 {
+	GameState state = GameMechanic::getInstance()->getGameState();
 
 	for (int i = 0; i < cards.size(); i++)
 	{
-		int placeIndex = isReverse ? (2 + i) % 4 : i;
-		float delay = MIDDLE_CARD_DELAY * i;
+		int placeIndex;
+		if (state == GameState::BEGIN_STATE)
+			placeIndex = isReverse ? (2 + i) % 4 : i;
+		else if (state == GameState::PREFLOP)
+			placeIndex = CardPlace::TABLE_0 + i;
+		else if (state == GameState::FLOP)
+			placeIndex = CardPlace::TABLE_3;
+		else if (state == GameState::TURN)
+			placeIndex = CardPlace::TABLE_4;
+		
 
+		float delay = MIDDLE_CARD_DELAY * i;
 		this->addCard(delay, cards[i], (CardPlace)placeIndex);
 	};
 

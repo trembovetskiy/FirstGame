@@ -31,7 +31,10 @@ void GameMechanic::initTurn()
 	if (this->compFirst)
 	{
 		this->compTurn();
-		//this->initUserTurn();
+	}
+	else
+	{
+		this->initUserTurn();
 	}
 }
 
@@ -78,12 +81,13 @@ void GameMechanic::setUserTurn(Turn* turn)
 void GameMechanic::endState(float delay)
 {
 	
-
 	DelayTime* delayAction = DelayTime::create(delay);
 	auto callback = CallFunc::create([this]() {
 		this->bank += this->comp->releaseTurn();
 		this->bank += this->user->releaseTurn();
 		GameScene::getInstance()->staticViewSynchronize();
+		this->incrementState(0.5);
+
 	});
 
 	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
@@ -93,27 +97,69 @@ void GameMechanic::endState(float delay)
 
 void GameMechanic::incrementState()
 {
+	vector<Card*> cards;
 	
 	switch (this->state)
 	{
 	case GameState::BEGIN_STATE:
 
 		GameScene::getInstance()->staticViewSynchronize();
-		this->toPreflopState();
+		cards = this->toPreflopState();
 		break;
+
+	case GameState::PREFLOP:
+		cards = this->toFlopState();
+		break;
+
+	case GameState::FLOP:
+		cards = this->toTurnState();
+		break;
+
+	case GameState::TURN:
+		cards = this->toRiverState();
+		break;
+
 	default:
 		break;
 	}
 
+	if (cards.size() == 0)
+		return;
+
+	GameScene* gameScene = GameScene::getInstance();
+	float delay = gameScene->addStartCards(cards, !this->compFirst);
+	gameScene->staticViewSynchronize(delay);
+
+
+	DelayTime* delayAction = DelayTime::create(delay + COMPUTER_TURN_DELAY);
+	auto callback = CallFunc::create([this]() {
+		this->initTurn();
+	});
+
+	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
+	GameScene::getInstance()->runAction(seq);
+
 	this->state = (GameState) ( this->state + 1 );
 }
 
+void GameMechanic::incrementState(float delay)
+{
+	DelayTime* delayAction = DelayTime::create(delay);
+	auto callback = CallFunc::create([this]() {
+		this->incrementState();
 
-void GameMechanic::toPreflopState()
+
+	});
+
+	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
+	GameScene::getInstance()->runAction(seq);
+}
+
+
+std::vector<Card*> GameMechanic::toPreflopState()
 {
 	this->bank = 0;
 	CardPool* cardPool = CardPool::getInstance();
-	GameScene* gameScene = GameScene::getInstance();
 	std::vector<Card*> cards;
 	for (int i = 0; i < 4; i++)
 		cards.push_back(cardPool->getRandomCard());
@@ -135,18 +181,47 @@ void GameMechanic::toPreflopState()
 		comp->setBet( BIG_BLIND );
 	}
 
-	float delay = gameScene->addStartCards(cards, !this->compFirst);
-	gameScene->staticViewSynchronize(delay);
+	return cards;
 
+}
 
-	DelayTime* delayAction = DelayTime::create(delay + COMPUTER_TURN_DELAY);
-	auto callback = CallFunc::create([this]() {
-		this->initTurn();
-	});
+std::vector<Card*> GameMechanic::toFlopState()
+{
+	CardPool* cardPool = CardPool::getInstance();
+	GameScene* gameScene = GameScene::getInstance();
+	std::vector<Card*> cards;
+	for (int i = 0; i < 3; i++)
+	{
+		Card* card = cardPool->getRandomCard();
+		cards.push_back(card);
+		this->tableCards.push_back(card);
+	}
 
-	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
-	GameScene::getInstance()->runAction(seq);
+	return cards;
+}
 
+std::vector<Card*> GameMechanic::toTurnState()
+{
+	CardPool* cardPool = CardPool::getInstance();
+	GameScene* gameScene = GameScene::getInstance();
+	std::vector<Card*> cards;
+	Card* card = cardPool->getRandomCard();
+	cards.push_back(card);
+	this->tableCards.push_back(card);
+
+	return cards;
+}
+
+std::vector<Card*> GameMechanic::toRiverState()
+{
+	CardPool* cardPool = CardPool::getInstance();
+	GameScene* gameScene = GameScene::getInstance();
+	std::vector<Card*> cards;
+	Card* card = cardPool->getRandomCard();
+	cards.push_back(card);
+	this->tableCards.push_back(card);
+
+	return cards;
 }
 
 GameMechanic* GameMechanic::instance = nullptr;

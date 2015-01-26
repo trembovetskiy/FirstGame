@@ -31,7 +31,11 @@ private:
 	bool compFirst;
 	int bank;
 
-	void toPreflopState();
+	std::vector<Card*> toPreflopState();
+	std::vector<Card*> toFlopState();
+	std::vector<Card*> toTurnState();
+	std::vector<Card*> toRiverState();
+
 	void initTurn();
 	void compTurn();
 	void initUserTurn();
@@ -43,12 +47,14 @@ public:
 	~GameMechanic();
 	
 	void incrementState();
+	void incrementState(float delay);
 	Combination* getUserCombination();
 	void setUserTurn(Turn* turn);
 
 	Player* getComp(){ return comp; }
 	Player* getUser(){ return user; }
 	int getBank() {return bank; }
+	GameState getGameState() { return state; }
 
 	static GameMechanic* getInstance();
 };
