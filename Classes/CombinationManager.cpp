@@ -368,3 +368,22 @@ Combination* CombinationManager::getCurrentCombination(Player* player, CardSet& 
 
 	return res;
 }
+
+GameResult CombinationManager::getGameResult(Player* user, Player* comp, CardSet& tableCards)
+{
+	Combination* userComb = CombinationManager::getCurrentCombination(user, tableCards);
+	Combination* compComb = CombinationManager::getCurrentCombination(comp, tableCards);
+	if (userComb->comb > compComb->comb)
+		return GameResult::WIN;
+	else if (userComb->comb < compComb->comb)
+		return GameResult::FAIL;
+	else
+	{
+		if (userComb->card > compComb->card)
+			return GameResult::WIN;
+		else if (userComb->card < compComb->card)
+			return GameResult::FAIL;
+		else
+			return GameResult::HALF;
+	}
+}

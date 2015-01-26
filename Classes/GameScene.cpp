@@ -140,6 +140,7 @@ void GameScene::addCard(float firstDelay, Card* card, CardPlace place)
 	
 	CardSprite* c = CardSprite::createCard(card, place);
 	this->addChild(c);
+	this->cards[place] = c;
 	c->animate( firstDelay );
 }
 
@@ -245,6 +246,57 @@ void GameScene::setUserButtons(std::vector<Turn*> turns)
 		btn->setVisible(true);
 		posIndex++;
 	}
+}
+
+float GameScene::showFinalEffect(GameResult result)
+{
+	this->cards[CardPlace::COMP_0]->showCard();
+	this->cards[CardPlace::COMP_1]->showCard();
+
+	//--------------text effect------------
+	auto textLabel = LabelTTF::create("", "fonts/GameFont.ttf", 40);
+
+	switch (result)
+	{
+	case GameResult::WIN:
+		textLabel->setString( LanguageManager::getInstance()->getStringForKey("Win") );
+		textLabel->setColor(Color3B::GREEN);
+		break;
+
+	case GameResult::FAIL:
+		textLabel->setString(LanguageManager::getInstance()->getStringForKey("Fail"));
+		textLabel->setColor(Color3B::RED);
+		break;
+
+	case GameResult::HALF:
+		textLabel->setString(LanguageManager::getInstance()->getStringForKey("Half"));
+		textLabel->setColor(Color3B::ORANGE);
+		break;
+
+		default:
+			break;
+	}
+	Size size = Director::getInstance()->getVisibleSize();
+	textLabel->setPosition(Vec2(size.width / 2, size.height / 2));
+	this->addChild(textLabel);
+
+	auto scale = ScaleTo::create(1, 5);
+	auto fade = FadeOut::create(0.5);
+	auto callback = CallFuncN::create([this](Node* node) {
+		node->removeFromParentAndCleanup(true);
+
+		map<CardPlace, CardSprite*>::iterator i;
+		for (i = this->cards.begin(); i != this->cards.end(); i++)
+		{
+			CardSprite* c = i->second;
+			c->removeFromParentAndCleanup(true);
+		}
+	});
+
+	auto sequence = Sequence::create(scale, fade, callback, nullptr);
+	textLabel->runAction(sequence);
+
+	return 1.5;
 }
 
 //-----------------------------static----------------------------------

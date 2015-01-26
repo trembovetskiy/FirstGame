@@ -7,6 +7,13 @@
 #include <algorithm>
 using namespace std;
 
+enum GameResult
+{
+	WIN,
+	HALF,
+	FAIL
+};
+
 enum Combinations
 {
 	KICKER,
@@ -52,6 +59,7 @@ private:
 	static Combination* getMaxCombination(CardSet &cardSet);
 public:
 	static Combination* getCurrentCombination(Player* player, CardSet& tableCards);
+	static GameResult getGameResult(Player* user, Player* comp, CardSet& tableCards);
 
 };
 

@@ -84,3 +84,10 @@ int Player::releaseTurn()
 	this->betMoney = 0;
 	return t;
 }
+
+void Player::reset()
+{
+	delete(this->cards[0]);
+	delete(this->cards[1]);
+	cards[0] = cards[1] = nullptr;
+}

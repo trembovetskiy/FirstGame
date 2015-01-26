@@ -29,6 +29,8 @@ public:
 	void staticViewSynchronize(double delay);
 	void setUserButtons(std::vector<Turn*> turns);
 
+	float showFinalEffect(GameResult result);
+
 	static GameScene* instance;
 	static GameScene* getInstance();
 	

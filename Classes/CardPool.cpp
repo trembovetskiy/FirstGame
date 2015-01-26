@@ -47,3 +47,16 @@ Card* CardPool::getRandomCard()
 	return card;
 }
 
+void CardPool::reset()
+{
+	pool.clear();
+	for (int i = SUITE_CLUBS; i <= SUITE_SPADES; i++)
+	for (int j = CARD_2; j <= CARD_A; j++)
+	{
+		Card* card = new Card;
+		card->suite = (Suite)i;
+		card->range = (Range)j;
+		pool.push_back(card);
+	}
+}
+

@@ -119,6 +119,10 @@ void GameMechanic::incrementState()
 		cards = this->toRiverState();
 		break;
 
+	case GameState::RIVER:
+		this->toFinalState();
+		break;
+
 	default:
 		break;
 	}
@@ -222,6 +226,35 @@ std::vector<Card*> GameMechanic::toRiverState()
 	this->tableCards.push_back(card);
 
 	return cards;
+}
+
+void GameMechanic::toFinalState()
+{
+	GameResult result = CombinationManager::getGameResult(this->user, this->comp, this->tableCards);
+	if (result == GameResult::WIN)
+	{
+		this->user->addMoney(this->bank);
+	} 
+	else if (result == GameResult::FAIL)
+	{
+		this->comp->addMoney(this->bank);
+	}
+	else
+	{
+		this->user->addMoney(this->bank / 2);
+		this->comp->addMoney(this->bank / 2);
+	}
+
+	this->bank = 0;
+	this->state = GameState::BEGIN_STATE;
+	this->comp->reset();
+	this->user->reset();
+	this->compFirst = !this->compFirst;
+	CardPool::getInstance()->reset();
+	this->tableCards.clear();
+
+	float delay = GameScene::getInstance()->showFinalEffect( result );
+	this->incrementState(delay + 0.5);
 }
 
 GameMechanic* GameMechanic::instance = nullptr;

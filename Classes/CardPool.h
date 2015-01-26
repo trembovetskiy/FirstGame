@@ -15,6 +15,7 @@ public:
 
 	static CardPool* getInstance();
 	Card* getRandomCard();
+	void reset();
 };
 
 #endif

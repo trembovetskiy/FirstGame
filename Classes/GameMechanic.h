@@ -35,6 +35,7 @@ private:
 	std::vector<Card*> toFlopState();
 	std::vector<Card*> toTurnState();
 	std::vector<Card*> toRiverState();
+	void toFinalState();
 
 	void initTurn();
 	void compTurn();

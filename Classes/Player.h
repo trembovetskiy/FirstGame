@@ -37,12 +37,15 @@ public:
 	std::vector<Turn*> getAllowTurns(Player* enemyPlayer);
 	void setTurn(Turn* turn);
 	int releaseTurn();
+	void reset();
 
 	int getMoney() { return money; }
 	int getBetMoney() { return betMoney; }
 	PlayerType getType() { return playerType; }
 	Card* getCard(int index) { return cards[index]; }
 	Turn* getCurrentTurn() { return currentTurn; }
+
+	void addMoney(int value) { money += value; }
 };
 
 #endif
