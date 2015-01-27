@@ -2,6 +2,7 @@
 #define _PLAYER_H
 
 #include "Config.h"
+#include <algorithm>
 #include <vector>
 
 enum Turns

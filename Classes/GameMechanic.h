@@ -37,6 +37,8 @@ private:
 	std::vector<Card*> toRiverState();
 	void toFinalState();
 
+	void fold(bool isUser);
+
 	void initTurn();
 	void compTurn();
 	void initUserTurn();

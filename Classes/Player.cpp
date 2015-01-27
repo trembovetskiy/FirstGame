@@ -59,7 +59,7 @@ std::vector<Turn*> Player::getAllowTurns(Player* enemyPlayer)
 	{
 		t = new Turn;
 		t->turn = Turns::TURN_RAISE;
-		t->value = this->money;
+		t->value = std::min(std::max( this->betMoney * 2, SMALL_BLIND), this->money);
 		res.push_back(t);
 	}
 		

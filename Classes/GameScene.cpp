@@ -14,16 +14,29 @@ GameScene::~GameScene()
 
 void GameScene::onBtnClick(Object* sender)
 {
-	MenuItemImage* m = (MenuItemImage*)sender;
-	int num = m->getTag();
-	Turn* turn = new Turn;
-	turn->turn = (Turns)num;
-	turn->value = 0;
+	MenuItemImage* m = (MenuItemImage*)sender;;
+	Turn* turn = (Turn*)m->getUserData();
 
 	GameMechanic::getInstance()->setUserTurn( turn );
 
 	for (int i = Turns::TURN_CHECK; i <= Turns::TURN_FOLD; i++)
 		this->userButtons[i]->setVisible(false);
+}
+
+void GameScene::clearCards(float delay)
+{
+	auto delayF = DelayTime::create(delay);
+	auto callback = CallFunc::create([this]() {
+		map<CardPlace, CardSprite*>::iterator i;
+		for (i = this->cards.begin(); i != this->cards.end(); i++)
+		{
+			CardSprite* c = i->second;
+			c->removeFromParentAndCleanup(true);
+		}
+	});
+
+	auto sequence = Sequence::create(delayF,callback, nullptr);
+	this->runAction(sequence);
 }
 
 void GameScene::createBackground()
@@ -60,10 +73,6 @@ void GameScene::createBackground()
 
 		this->addChild(placeSprite);
 	}
-
-	//auto menu = Menu::create(m, NULL);
-	//menu->setPosition(50, 50);
-	//this->addChild(menu);
 	
 }
 
@@ -242,6 +251,7 @@ void GameScene::setUserButtons(std::vector<Turn*> turns)
 	{
 		Turn* turn = *i;
 		auto btn = this->userButtons[turn->turn];
+		btn->setUserData(turn);
 		btn->setPosition(Vec2(150 + btn->getContentSize().width * posIndex, 30));
 		btn->setVisible(true);
 		posIndex++;
@@ -285,12 +295,7 @@ float GameScene::showFinalEffect(GameResult result)
 	auto callback = CallFuncN::create([this](Node* node) {
 		node->removeFromParentAndCleanup(true);
 
-		map<CardPlace, CardSprite*>::iterator i;
-		for (i = this->cards.begin(); i != this->cards.end(); i++)
-		{
-			CardSprite* c = i->second;
-			c->removeFromParentAndCleanup(true);
-		}
+		this->clearCards();
 	});
 
 	auto sequence = Sequence::create(scale, fade, callback, nullptr);

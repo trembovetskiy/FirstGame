@@ -28,6 +28,7 @@ public:
 	void staticViewSynchronize();
 	void staticViewSynchronize(double delay);
 	void setUserButtons(std::vector<Turn*> turns);
+	void clearCards(float delay = 0);
 
 	float showFinalEffect(GameResult result);
 

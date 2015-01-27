@@ -6,7 +6,7 @@ GameMechanic::GameMechanic()
 	this->state = GameState::BEGIN_STATE;
 	this->comp = new Player( PlayerType::COMPUTER );
 	this->user = new Player( PlayerType::USER );
-	this->compFirst = true;
+	this->compFirst = false;
 }
 
 GameMechanic::~GameMechanic()
@@ -46,6 +46,12 @@ void GameMechanic::compTurn()
 	comp->setTurn(compTurn);
 	GameScene::getInstance()->staticViewSynchronize();
 
+	if (compTurn->turn == Turns::TURN_FOLD)
+	{
+		this->fold(false);
+		return;
+	}
+
 	if (this->compFirst || compTurn->turn == Turns::TURN_RAISE)
 	{
 		this->initUserTurn();
@@ -67,9 +73,23 @@ void GameMechanic::setUserTurn(Turn* turn)
 {
 	user->setTurn(turn);
 	GameScene::getInstance()->staticViewSynchronize();
+
+	if (turn->turn == Turns::TURN_FOLD)
+	{
+		this->fold(true);
+		return;
+	}
+
 	if (!this->compFirst || turn->turn == Turns::TURN_RAISE)
 	{
-		this->compTurn();
+		
+		DelayTime* delayAction = DelayTime::create(COMPUTER_TURN_DELAY);
+		auto callback = CallFunc::create([this]() {
+			this->compTurn();
+		});
+
+		Sequence* seq = Sequence::create(delayAction, callback, nullptr);
+		GameScene::getInstance()->runAction(seq);
 	}
 	else
 	{
@@ -93,6 +113,27 @@ void GameMechanic::endState(float delay)
 	Sequence* seq = Sequence::create(delayAction, callback, nullptr);
 	GameScene::getInstance()->runAction(seq);
 
+}
+
+void GameMechanic::fold(bool isUser)
+{
+	int money = comp->releaseTurn() + user->releaseTurn() + this->bank;
+	this->bank = 0;
+	if (!isUser)
+		user->addMoney(money);
+	else
+		comp->addMoney(money);
+	GameScene:: getInstance()-> staticViewSynchronize();
+
+	this->state = GameState::BEGIN_STATE;
+	this->comp->reset();
+	this->user->reset();
+	this->compFirst = !this->compFirst;
+	CardPool::getInstance()->reset();
+	this->tableCards.clear();
+
+	GameScene::getInstance()->clearCards(1);
+    this->incrementState(1.5);
 }
 
 void GameMechanic::incrementState()
